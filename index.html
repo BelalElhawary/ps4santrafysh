@@ -13,7 +13,7 @@
             min-height: 100%;
             background: #0b0d10;
             color: #c8ced8;
-            font: 15px/1.45 "Segoe UI", system-ui, sans-serif;
+            font: 15px/1.45 "Segoe UI", Tahoma, Arial, system-ui, sans-serif;
         }
 
         html {
@@ -27,6 +27,7 @@
         }
 
         #brand {
+            position: relative;
             text-align: center;
             padding: 12px 10px;
             background: #0e1116;
@@ -69,6 +70,24 @@
         #credits a:hover,
         #credits a:focus {
             color: #c8ced8;
+        }
+
+        #lang {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font: 12px/1 "Segoe UI", Tahoma, Arial, system-ui, sans-serif;
+            padding: 6px 10px;
+            color: #c8ced8;
+            background: #171c24;
+            border: 1px solid #2a3441;
+            border-radius: 5px;
+        }
+
+        #lang:hover,
+        #lang:focus {
+            color: #7fd0a0;
+            border-color: #3a6b52;
         }
 
         #wrap {
@@ -313,24 +332,44 @@
         .warn {
             color: #d8c07f;
         }
+
+        /* Arabic / right-to-left: mirror every physical left/right margin. */
+        html[dir="rtl"] #lang {
+            right: auto;
+            left: 10px;
+        }
+
+        html[dir="rtl"] #cache:before {
+            margin-right: 0;
+            margin-left: 8px;
+        }
+
+        html[dir="rtl"] .fwbtn {
+            margin: 0 0 6px 6px;
+        }
+
+        html[dir="rtl"] #fwlegend .swatch {
+            margin-right: 0;
+            margin-left: 6px;
+        }
     </style>
 </head>
 
 <body>
-    <div id="brand"><b>Santrafysh</b>
-        <div id="credits">by santrafysh &middot; built on <a href="https://github.com/raw13g/raw13g.github.io" target="_blank" rel="noopener">raw-games</a> &amp; <a href="https://github.com/mansoor0x/polpNO" target="_blank" rel="noopener">mansoor0x</a></div>
+    <div id="brand"><button type="button" id="lang"></button><b>Santrafysh</b>
+        <div id="credits"></div>
     </div>
     <div id="wrap">
         <div id="state">detecting firmware...</div>
         <div id="det"></div>
         <div id="cache"></div>
         <div id="manual">
-            <div id="manualLabel">or run a specific firmware's offsets manually:</div>
+            <div id="manualLabel"></div>
             <div id="fwbtns"></div>
             <ul id="fwlegend">
-                <li><span class="swatch auto"></span><b>auto</b> &mdash; detects your console's firmware from its browser and launches the matching offsets automatically.</li>
-                <li><span class="swatch gold"></span><b>gold mark</b> &mdash; that firmware runs <b>GoldHEN</b>.</li>
-                <li><span class="swatch silver"></span><b>silver mark</b> &mdash; that firmware runs (plain) <b>HEN</b>.</li>
+                <li><span class="swatch auto"></span><span id="legAuto"></span></li>
+                <li><span class="swatch gold"></span><span id="legGold"></span></li>
+                <li><span class="swatch silver"></span><span id="legSilver"></span></li>
             </ul>
         </div>
     </div>
@@ -338,11 +377,157 @@
     <script type="module">
         import { FW_KEYS } from "./ps4_offsets.js";
         (function () {
+            // ---- i18n --------------------------------------------------------
+            var STR = {
+                en: {
+                    dir: "ltr",
+                    langBtn: "العربية",
+                    langBtnTitle: "Switch to Arabic",
+                    credits: "by santrafysh &middot; built on "
+                        + "<a href=\"https://github.com/raw13g/raw13g.github.io\" target=\"_blank\" rel=\"noopener\">raw-games</a> &amp; "
+                        + "<a href=\"https://github.com/mansoor0x/polpNO\" target=\"_blank\" rel=\"noopener\">mansoor0x</a>",
+                    manualLabel: "or run a specific firmware's offsets manually:",
+                    legAuto: "<b>auto</b> &mdash; detects your console's firmware from its browser and launches the matching offsets automatically.",
+                    legGold: "<b>gold mark</b> &mdash; that firmware runs <b>GoldHEN</b>.",
+                    legSilver: "<b>silver mark</b> &mdash; that firmware runs (plain) <b>HEN</b>.",
+                    autoWord: "auto",
+                    autoTitle: "detect firmware from this browser's user-agent",
+                    firmwareLabel: "firmware",
+                    unknown: "unknown",
+                    supported: "supported",
+                    notInTable: "not in this build's kernel table",
+                    measured: "measured on hardware",
+                    unmeasured: "not measured on hardware -- may fail",
+                    detecting: "detecting firmware...",
+                    loading: "loading jailbreak...",
+                    unsupportedState: "UNSUPPORTED FIRMWARE",
+                    unsupportedTap: "UNSUPPORTED ({fw}) -- press X or tap to run anyway",
+                    offlineCache: "offline -- from cache",
+                    cached: "cached",
+                    updateDownloaded: "update downloaded",
+                    updateReadyTap: "UPDATE READY -- press X or tap to reload & run",
+                    checkingCache: "checking cache...",
+                    cachingFirst: "caching for offline (first run)...",
+                    cachingPct: "caching {pct}%",
+                    cachedOffline: "cached for offline use",
+                    cachedTap: "CACHED (first run) -- press X or tap to run",
+                    noupdateCache: "cached -- offline ready",
+                    cacheUnavailable: "cache unavailable",
+                    cacheFailedTap: "CACHE FAILED -- press X or tap to run anyway",
+                    cacheObsolete: "cache obsolete",
+                    cacheObsoleteTap: "CACHE OBSOLETE -- press X or tap to run"
+                },
+                ar: {
+                    dir: "rtl",
+                    langBtn: "English",
+                    langBtnTitle: "التبديل إلى الإنجليزية",
+                    credits: "بواسطة santrafysh &middot; مبني على "
+                        + "<a href=\"https://github.com/raw13g/raw13g.github.io\" target=\"_blank\" rel=\"noopener\">raw-games</a> و "
+                        + "<a href=\"https://github.com/mansoor0x/polpNO\" target=\"_blank\" rel=\"noopener\">mansoor0x</a>",
+                    manualLabel: "أو شغّل تعريفات إصدار برنامج ثابت معيّن يدويًا:",
+                    legAuto: "<b>تلقائي</b> &mdash; يكتشف إصدار البرنامج الثابت لجهازك من متصفحه ويشغّل التعريفات المطابقة تلقائيًا.",
+                    legGold: "<b>علامة ذهبية</b> &mdash; يعمل هذا الإصدار بنظام <b>GoldHEN</b>.",
+                    legSilver: "<b>علامة فضية</b> &mdash; يعمل هذا الإصدار بنظام <b>HEN</b> العادي.",
+                    autoWord: "تلقائي",
+                    autoTitle: "اكتشاف إصدار البرنامج الثابت من متصفح هذا الجهاز",
+                    firmwareLabel: "البرنامج الثابت",
+                    unknown: "غير معروف",
+                    supported: "مدعوم",
+                    notInTable: "غير مدرج في جدول النواة لهذا الإصدار",
+                    measured: "تم قياسه على جهاز فعلي",
+                    unmeasured: "لم يُقَس على جهاز فعلي -- قد يفشل",
+                    detecting: "جارٍ اكتشاف البرنامج الثابت...",
+                    loading: "جارٍ تحميل الجيلبريك...",
+                    unsupportedState: "برنامج ثابت غير مدعوم",
+                    unsupportedTap: "غير مدعوم ({fw}) -- اضغط X أو المس للتشغيل رغم ذلك",
+                    offlineCache: "غير متصل -- من الذاكرة المؤقتة",
+                    cached: "مخزَّن مؤقتًا",
+                    updateDownloaded: "تم تنزيل التحديث",
+                    updateReadyTap: "التحديث جاهز -- اضغط X أو المس لإعادة التحميل والتشغيل",
+                    checkingCache: "جارٍ التحقق من الذاكرة المؤقتة...",
+                    cachingFirst: "جارٍ التخزين المؤقت للعمل دون اتصال (أول تشغيل)...",
+                    cachingPct: "جارٍ التخزين المؤقت {pct}%",
+                    cachedOffline: "تم التخزين المؤقت للاستخدام دون اتصال",
+                    cachedTap: "تم التخزين المؤقت (أول تشغيل) -- اضغط X أو المس للتشغيل",
+                    noupdateCache: "مخزَّن مؤقتًا -- جاهز دون اتصال",
+                    cacheUnavailable: "الذاكرة المؤقتة غير متوفرة",
+                    cacheFailedTap: "فشلت الذاكرة المؤقتة -- اضغط X أو المس للتشغيل رغم ذلك",
+                    cacheObsolete: "الذاكرة المؤقتة قديمة",
+                    cacheObsoleteTap: "الذاكرة المؤقتة قديمة -- اضغط X أو المس للتشغيل"
+                }
+            };
+
+            var lang = "en";
+            try {
+                var saved = localStorage.getItem("santrafysh_lang");
+                if (saved === "en" || saved === "ar") lang = saved;
+                else if ((navigator.language || "").toLowerCase().indexOf("ar") === 0) lang = "ar";
+            } catch (e) { }
+
+            function t(key, p) {
+                var s = (STR[lang] && STR[lang][key]) || STR.en[key] || key;
+                if (p) {
+                    Object.keys(p).forEach(function (k) {
+                        var v = p[k];
+                        if (v === null || v === undefined) v = t("unknown");
+                        s = s.split("{" + k + "}").join(v);
+                    });
+                }
+                return s;
+            }
+
             var stateEl = document.getElementById("state");
             var detEl = document.getElementById("det");
             var cacheEl = document.getElementById("cache");
-            function setState(t, c) { stateEl.textContent = t; stateEl.className = c || ""; }
-            function setCache(t, ok) { cacheEl.textContent = t; cacheEl.className = ok ? "cacheok" : ""; }
+            var creditsEl = document.getElementById("credits");
+            var langBtn = document.getElementById("lang");
+            var manualLabelEl = document.getElementById("manualLabel");
+            var legAutoEl = document.getElementById("legAuto");
+            var legGoldEl = document.getElementById("legGold");
+            var legSilverEl = document.getElementById("legSilver");
+
+            var curStateKey = "detecting", curStateParams = null, curStateClass = null;
+            var curCacheKey = null, curCacheParams = null, curCacheOk = false;
+
+            function setState(key, cls, p) {
+                curStateKey = key; curStateClass = cls; curStateParams = p;
+                stateEl.textContent = t(key, p);
+                stateEl.className = cls || "";
+            }
+            function setCache(key, ok, p) {
+                curCacheKey = key; curCacheOk = ok; curCacheParams = p;
+                cacheEl.textContent = key ? t(key, p) : "";
+                cacheEl.className = ok ? "cacheok" : "";
+            }
+
+            function applyLang() {
+                document.documentElement.lang = lang;
+                document.documentElement.dir = STR[lang].dir;
+                if (langBtn) {
+                    langBtn.textContent = t("langBtn");
+                    langBtn.title = t("langBtnTitle");
+                }
+                creditsEl.innerHTML = t("credits");
+                manualLabelEl.textContent = t("manualLabel");
+                legAutoEl.innerHTML = t("legAuto");
+                legGoldEl.innerHTML = t("legGold");
+                legSilverEl.innerHTML = t("legSilver");
+                renderDet();
+                buildFwButtons();
+                stateEl.textContent = t(curStateKey, curStateParams);
+                stateEl.className = curStateClass || "";
+                cacheEl.textContent = curCacheKey ? t(curCacheKey, curCacheParams) : "";
+                cacheEl.className = curCacheOk ? "cacheok" : "";
+            }
+
+            if (langBtn) {
+                langBtn.addEventListener("click", function () {
+                    lang = lang === "en" ? "ar" : "en";
+                    try { localStorage.setItem("santrafysh_lang", lang); } catch (e) { }
+                    applyLang();
+                });
+            }
+
             var params = new URLSearchParams(location.search);
 
             // Firmwares this build has a MEASURED kernel table for. jb.js still runs its
@@ -364,9 +549,11 @@
             var forced = params.get("force") === "1";
             var fwParam = params.get("fw");
             var supported = forced || (fwnum !== null && SUPPORTED[fwnum] === 1);
-            detEl.innerHTML = "firmware <b>" + (key || "unknown") + "</b>"
-                + (supported ? " &middot; <b>supported</b>"
-                    : " &middot; not in this build's kernel table");
+            function renderDet() {
+                detEl.innerHTML = t("firmwareLabel") + " <b>" + (key || t("unknown")) + "</b>"
+                    + (supported ? " &middot; <b>" + t("supported") + "</b>"
+                        : " &middot; " + t("notInTable"));
+            }
 
             // fwnum for an offsets-table key, using the same hex-as-decimal
             // convention as the UA-sniffed fwnum above (KEEP IN SYNC).
@@ -385,12 +572,15 @@
 
             var fwbtnsEl = document.getElementById("fwbtns");
             var manualEl = document.getElementById("manual");
-            if (fwbtnsEl && manualEl && FW_KEYS && FW_KEYS.length) {
+            function buildFwButtons() {
+                if (!(fwbtnsEl && manualEl && FW_KEYS && FW_KEYS.length)) return;
+                fwbtnsEl.innerHTML = "";
+
                 var autoBtn = document.createElement("button");
                 autoBtn.type = "button";
                 autoBtn.className = "fwbtn auto" + (fwParam ? "" : " current");
-                autoBtn.innerHTML = "auto<small>" + (key || "unknown") + "</small>";
-                autoBtn.title = "detect firmware from this browser's user-agent";
+                autoBtn.innerHTML = t("autoWord") + "<small>" + (key || t("unknown")) + "</small>";
+                autoBtn.title = t("autoTitle");
                 autoBtn.addEventListener("click", function () {
                     var sp = new URLSearchParams(location.search);
                     sp.delete("fw");
@@ -408,9 +598,7 @@
                         + (measured ? "" : " unmeasured")
                         + (gold ? " gold" : " silver");
                     btn.textContent = v;
-                    btn.title = (measured
-                        ? "measured on hardware"
-                        : "not measured on hardware -- may fail")
+                    btn.title = (measured ? t("measured") : t("unmeasured"))
                         + " -- " + (gold ? "GoldHEN" : "HEN");
                     btn.addEventListener("click", function () {
                         var sp = new URLSearchParams(location.search);
@@ -422,12 +610,13 @@
                 });
                 manualEl.className = "show";
             }
+            applyLang();
 
             var target = "jb.html" + location.search;
-            function go() { setState("loading jailbreak...", "warn"); location.replace(target); }
+            function go() { setState("loading", "warn"); location.replace(target); }
 
-            function waitForTap(msg, action) {
-                setState(msg, "warn");
+            function waitForTap(key, action, p) {
+                setState(key, "warn", p);
                 function fire() {
                     window.removeEventListener("click", fire);
                     window.removeEventListener("keydown", fire);
@@ -440,8 +629,8 @@
             // Off-target consoles are not launched automatically -- one tap still runs
             // it, so a user-agent quirk on the real 13.52 console can never lock it out.
             if (!supported) {
-                setState("UNSUPPORTED FIRMWARE", "bad");
-                waitForTap("UNSUPPORTED (" + (key || "unknown") + ") -- press X or tap to run anyway", go);
+                setState("unsupportedState", "bad");
+                waitForTap("unsupportedTap", go, { fw: key });
                 return;
             }
 
@@ -449,45 +638,43 @@
             if (!ac || !document.documentElement.hasAttribute("manifest")) {
                 go();
             } else if (!navigator.onLine) {
-                setCache("offline -- from cache", true);
+                setCache("offlineCache", true);
                 go();
             } else if (ac.status === ac.IDLE) {
                 setCache("cached", true);
                 go();
             } else if (ac.status === ac.UPDATEREADY) {
                 try { ac.swapCache(); } catch (e) { }
-                setCache("update downloaded", true);
-                waitForTap("UPDATE READY -- press X or tap to reload & run",
-                    function () { location.reload(); });
+                setCache("updateDownloaded", true);
+                waitForTap("updateReadyTap", function () { location.reload(); });
             } else {
-                setCache("checking cache...");
+                setCache("checkingCache");
                 ac.addEventListener("downloading",
-                    function () { setCache("caching for offline (first run)..."); }, false);
+                    function () { setCache("cachingFirst"); }, false);
                 ac.addEventListener("progress", function (e) {
                     if (e && e.total)
-                        setCache("caching " + Math.round((e.loaded / e.total) * 100) + "%");
+                        setCache("cachingPct", false, { pct: Math.round((e.loaded / e.total) * 100) });
                 }, false);
                 ac.addEventListener("cached", function () {
-                    setCache("cached for offline use", true);
-                    waitForTap("CACHED (first run) -- press X or tap to run", go);
+                    setCache("cachedOffline", true);
+                    waitForTap("cachedTap", go);
                 }, false);
                 ac.addEventListener("updateready", function () {
                     try { ac.swapCache(); } catch (e) { }
-                    setCache("update downloaded", true);
-                    waitForTap("UPDATE READY -- press X or tap to reload & run",
-                        function () { location.reload(); });
+                    setCache("updateDownloaded", true);
+                    waitForTap("updateReadyTap", function () { location.reload(); });
                 }, false);
                 ac.addEventListener("noupdate", function () {
-                    setCache("cached -- offline ready", true);
+                    setCache("noupdateCache", true);
                     go();
                 }, false);
                 ac.addEventListener("error", function () {
-                    setCache("cache unavailable");
-                    waitForTap("CACHE FAILED -- press X or tap to run anyway", go);
+                    setCache("cacheUnavailable");
+                    waitForTap("cacheFailedTap", go);
                 }, false);
                 ac.addEventListener("obsolete", function () {
-                    setCache("cache obsolete");
-                    waitForTap("CACHE OBSOLETE -- press X or tap to run", go);
+                    setCache("cacheObsolete");
+                    waitForTap("cacheObsoleteTap", go);
                 }, false);
             }
         })();
