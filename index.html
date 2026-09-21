@@ -564,7 +564,7 @@
 
             // Firmwares 11.xx-13.xx run GoldHEN, except these which only have plain HEN.
             // KEEP IN SYNC with the actual plugin support for each build.
-            var HEN_ONLY = { 1302: 1, 1304: 1, 1350: 1 };
+            var HEN_ONLY = {};
             function isGoldhen(v) {
                 var n = fwnumOfKey(v);
                 return n >= 1100 && n <= 1399 && HEN_ONLY[n] !== 1;
