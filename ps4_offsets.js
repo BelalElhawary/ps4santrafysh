@@ -91,6 +91,7 @@ export const PS4 = {
     wk_ArrayBuffer_m_contents_m_data: 0x10,
 
     k_getpid: 0x1b280,
+    payload: "payload.bin",
 
     k_scan_stage1: 0x40000,
     k_scan_stage2: 0x60000,
@@ -174,6 +175,7 @@ export const PS4 = {
     },
     k_scan_stage1: 0x40000,
     k_scan_stage2: 0x60000,
+    payload: "payload.bin",
 
     k_evf_cv: 0x784318,
     k_sysent_661: 0x110a760,
@@ -254,6 +256,7 @@ export const PS4 = {
     },
     k_scan_stage1: 0x40000,
     k_scan_stage2: 0x60000,
+    payload: "payload.bin",
 
     k_evf_cv: 0x784798,
     k_sysent_661: 0x110a760,
@@ -644,10 +647,24 @@ PS4["12.52"] = Object.assign({}, PS4["12.50"], {
   kpatch: "1250.bin",
 });
 
-export function offsetsFor(uaString) {
+// forcedKey lets a caller (e.g. a manual firmware picker) skip UA sniffing
+// entirely and pull a specific table entry instead.
+export function offsetsFor(uaString, forcedKey) {
+  if (forcedKey) return { key: forcedKey, off: PS4[forcedKey] || null };
+
   const m = (uaString || "").match(/PlayStation\s+4[\/ ](\d+)\.(\d+)/);
   if (!m) return { key: null, off: null };
 
   const key = m[1] + "." + parseInt(m[2], 16).toString(16).padStart(2, "0");
   return { key, off: PS4[key] || null };
 }
+
+// Every firmware key with a table entry, sorted low to high (e.g. "13.52").
+// Used to render a manual version picker; PS4 itself stays the source of truth.
+export const FW_KEYS = Object.keys(PS4).sort(function (a, b) {
+  const pa = a.split("."), pb = b.split(".");
+  return (
+    parseInt(pa[0], 10) - parseInt(pb[0], 10) ||
+    parseInt(pa[1], 16) - parseInt(pb[1], 16)
+  );
+});

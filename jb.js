@@ -144,8 +144,9 @@ let allDone = false,
   const opened = [];
   let closeFd = null;
   try {
-    const { key, off } = offsetsFor(navigator.userAgent);
-    mark("FW", key || "(not a PS4 UA)");
+    const fwOverride = params.get("fw") || null;
+    const { key, off } = offsetsFor(navigator.userAgent, fwOverride);
+    mark("FW", (key || "(not a PS4 UA)") + (fwOverride ? " (forced)" : ""));
     if (!off) {
       state("no offsets for this firmware", "bad");
       return;
