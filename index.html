@@ -231,6 +231,7 @@
             background: #171c24;
             border: 1px solid #2a3441;
             border-radius: 5px;
+            cursor: pointer;
         }
 
         .fwbtn.unmeasured {
@@ -242,112 +243,6 @@
             color: #7fd0a0;
             border-color: #3a6b52;
             background: #142019;
-        }
-
-        .fwbtn.auto {
-            width: 68px;
-            height: 68px;
-            padding: 0;
-            font-size: 13px;
-            font-weight: 700;
-            line-height: 1.2;
-            text-align: center;
-            color: #0b1a12;
-            background: #3fae6f;
-            background: -webkit-linear-gradient(top, #7fd0a0, #3fae6f);
-            background: linear-gradient(to bottom, #7fd0a0, #3fae6f);
-            border: 2px solid #3a6b52;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(127, 208, 160, .35);
-        }
-
-        .fwbtn.auto small {
-            display: block;
-            font-size: 10px;
-            font-weight: 600;
-            opacity: .75;
-        }
-
-        .fwbtn.auto.current {
-            border-color: #b8f0d0;
-            box-shadow: 0 0 16px rgba(127, 208, 160, .8);
-        }
-
-        .fwbtn.gold {
-            color: #f2dfa0;
-            border-color: #b8912f;
-            background: #211c10;
-            box-shadow: 0 0 8px rgba(212, 175, 55, .5), inset 0 0 8px rgba(212, 175, 55, .18);
-        }
-
-        .fwbtn.gold.unmeasured {
-            color: #d8c48a;
-        }
-
-        .fwbtn.gold.current {
-            border-color: #f0cf6a;
-            box-shadow: 0 0 16px rgba(240, 207, 106, .85), inset 0 0 10px rgba(240, 207, 106, .3);
-        }
-
-        .fwbtn.silver {
-            color: #d4dae2;
-            border-color: #8b95a3;
-            background: #171b20;
-            box-shadow: 0 0 6px rgba(196, 204, 214, .4), inset 0 0 6px rgba(196, 204, 214, .12);
-        }
-
-        .fwbtn.silver.current {
-            border-color: #e4e9ef;
-            box-shadow: 0 0 12px rgba(228, 233, 239, .7), inset 0 0 8px rgba(228, 233, 239, .25);
-        }
-
-        #fwlegend {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #1e2732;
-            font-size: 12px;
-            color: #8b95a3;
-        }
-
-        #fwlegend li {
-            margin: 0 0 6px;
-            list-style: none;
-        }
-
-        #fwlegend li:last-child {
-            margin-bottom: 0;
-        }
-
-        #fwlegend b {
-            color: #c8ced8;
-        }
-
-        #fwlegend .swatch {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            margin-right: 6px;
-            border-radius: 3px;
-            vertical-align: middle;
-        }
-
-        #fwlegend .swatch.gold {
-            border: 1px solid #b8912f;
-            background: #211c10;
-            box-shadow: 0 0 6px rgba(212, 175, 55, .6);
-        }
-
-        #fwlegend .swatch.silver {
-            border: 1px solid #8b95a3;
-            background: #171b20;
-            box-shadow: 0 0 6px rgba(196, 204, 214, .5);
-        }
-
-        #fwlegend .swatch.auto {
-            border: 1px solid #3a6b52;
-            background: -webkit-linear-gradient(top, #7fd0a0, #3fae6f);
-            background: linear-gradient(to bottom, #7fd0a0, #3fae6f);
-            border-radius: 50%;
         }
 
         .ok {
@@ -376,11 +271,6 @@
         html[dir="rtl"] .fwbtn {
             margin: 0 0 6px 6px;
         }
-
-        html[dir="rtl"] #fwlegend .swatch {
-            margin-right: 0;
-            margin-left: 6px;
-        }
     </style>
 </head>
 
@@ -396,11 +286,6 @@
         <div id="manual">
             <div id="manualLabel"></div>
             <div id="fwbtns"></div>
-            <ul id="fwlegend">
-                <li><span class="swatch auto"></span><span id="legAuto"></span></li>
-                <li><span class="swatch gold"></span><span id="legGold"></span></li>
-                <li><span class="swatch silver"></span><span id="legSilver"></span></li>
-            </ul>
         </div>
     </div>
 
@@ -418,11 +303,6 @@
                         + " &middot; AIO Fix by "
                         + "<a href=\"https://github.com/Al-Azif/ps4-exploit-kpatches\" target=\"_blank\" rel=\"noopener\">Al-Azif</a>",
                     manualLabel: "or run a specific firmware's offsets manually:",
-                    legAuto: "<b>auto</b> &mdash; detects your console's firmware from its browser and launches the matching offsets automatically.",
-                    legGold: "<b>gold mark</b> &mdash; that firmware runs <b>GoldHEN</b>.",
-                    legSilver: "<b>silver mark</b> &mdash; that firmware runs (plain) <b>HEN</b>.",
-                    autoWord: "auto",
-                    autoTitle: "detect firmware from this browser's user-agent",
                     firmwareLabel: "firmware",
                     unknown: "unknown",
                     supported: "supported",
@@ -458,11 +338,6 @@
                         + " &middot; إصلاح AIO بواسطة "
                         + "<a href=\"https://github.com/Al-Azif/ps4-exploit-kpatches\" target=\"_blank\" rel=\"noopener\">Al-Azif</a>",
                     manualLabel: "أو شغّل تعريفات إصدار برنامج ثابت معيّن يدويًا:",
-                    legAuto: "<b>تلقائي</b> &mdash; يكتشف إصدار البرنامج الثابت لجهازك من متصفحه ويشغّل التعريفات المطابقة تلقائيًا.",
-                    legGold: "<b>علامة ذهبية</b> &mdash; يعمل هذا الإصدار بنظام <b>GoldHEN</b>.",
-                    legSilver: "<b>علامة فضية</b> &mdash; يعمل هذا الإصدار بنظام <b>HEN</b> العادي.",
-                    autoWord: "تلقائي",
-                    autoTitle: "اكتشاف إصدار البرنامج الثابت من متصفح هذا الجهاز",
                     firmwareLabel: "البرنامج الثابت",
                     unknown: "غير معروف",
                     supported: "مدعوم",
@@ -517,9 +392,6 @@
             var creditsEl = document.getElementById("credits");
             var langBtn = document.getElementById("lang");
             var manualLabelEl = document.getElementById("manualLabel");
-            var legAutoEl = document.getElementById("legAuto");
-            var legGoldEl = document.getElementById("legGold");
-            var legSilverEl = document.getElementById("legSilver");
 
             var curStateKey = "detecting", curStateParams = null, curStateClass = null;
             var curCacheKey = null, curCacheParams = null, curCacheOk = false;
@@ -545,9 +417,6 @@
                 }
                 creditsEl.innerHTML = t("credits");
                 manualLabelEl.textContent = t("manualLabel");
-                legAutoEl.innerHTML = t("legAuto");
-                legGoldEl.innerHTML = t("legGold");
-                legSilverEl.innerHTML = t("legSilver");
                 renderDet();
                 buildFwButtons();
                 stateEl.textContent = t(curStateKey, curStateParams);
@@ -599,44 +468,21 @@
                 return parseInt(p[0], 10) * 100 + parseInt(p[1], 10);
             }
 
-            // Firmwares 11.xx-13.xx run GoldHEN, except these which only have plain HEN.
-            // KEEP IN SYNC with the actual plugin support for each build.
-            var HEN_ONLY = {};
-            function isGoldhen(v) {
-                var n = fwnumOfKey(v);
-                return n >= 1100 && n <= 1399 && HEN_ONLY[n] !== 1;
-            }
-
             var fwbtnsEl = document.getElementById("fwbtns");
             var manualEl = document.getElementById("manual");
             function buildFwButtons() {
                 if (!(fwbtnsEl && manualEl && FW_KEYS && FW_KEYS.length)) return;
                 fwbtnsEl.innerHTML = "";
 
-                var autoBtn = document.createElement("button");
-                autoBtn.type = "button";
-                autoBtn.className = "fwbtn auto" + (fwParam ? "" : " current");
-                autoBtn.innerHTML = t("autoWord") + "<small>" + (key || t("unknown")) + "</small>";
-                autoBtn.title = t("autoTitle");
-                autoBtn.addEventListener("click", function () {
-                    var sp = new URLSearchParams(location.search);
-                    sp.delete("fw");
-                    location.href = "jb.html?" + sp.toString();
-                });
-                fwbtnsEl.appendChild(autoBtn);
-
                 FW_KEYS.slice().reverse().forEach(function (v) {
                     var measured = SUPPORTED[fwnumOfKey(v)] === 1;
-                    var gold = isGoldhen(v);
                     var btn = document.createElement("button");
                     btn.type = "button";
                     btn.className = "fwbtn"
                         + (v === fwParam ? " current" : "")
-                        + (measured ? "" : " unmeasured")
-                        + (gold ? " gold" : " silver");
+                        + (measured ? "" : " unmeasured");
                     btn.textContent = v;
-                    btn.title = (measured ? t("measured") : t("unmeasured"))
-                        + " -- " + (gold ? "GoldHEN" : "HEN");
+                    btn.title = measured ? t("measured") : t("unmeasured");
                     btn.addEventListener("click", function () {
                         var sp = new URLSearchParams(location.search);
                         sp.set("fw", v);
