@@ -166,6 +166,35 @@
             box-shadow: 0 0 8px rgba(127, 208, 160, .7);
         }
 
+        #tapBtn {
+            display: none;
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px 14px;
+            font: 13px/1 "Segoe UI", system-ui, sans-serif;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: #0b1a12;
+            background: #3fae6f;
+            background: -webkit-linear-gradient(top, #7fd0a0, #3fae6f);
+            background: linear-gradient(to bottom, #7fd0a0, #3fae6f);
+            border: 2px solid #3a6b52;
+            border-radius: 6px;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        #tapBtn.show {
+            display: block;
+        }
+
+        #tapBtn:focus {
+            outline: none;
+            border-color: #b8f0d0;
+            box-shadow: 0 0 12px rgba(127, 208, 160, .7);
+        }
+
         #manual {
             margin-top: 12px;
             padding-top: 12px;
@@ -363,6 +392,7 @@
         <div id="state">detecting firmware...</div>
         <div id="det"></div>
         <div id="cache"></div>
+        <button type="button" id="tapBtn"></button>
         <div id="manual">
             <div id="manualLabel"></div>
             <div id="fwbtns"></div>
@@ -384,8 +414,7 @@
                     langBtn: "العربية",
                     langBtnTitle: "Switch to Arabic",
                     credits: "by santrafysh &middot; built on "
-                        + "<a href=\"https://github.com/raw13g/raw13g.github.io\" target=\"_blank\" rel=\"noopener\">raw-games</a> &amp; "
-                        + "<a href=\"https://github.com/mansoor0x/polpNO\" target=\"_blank\" rel=\"noopener\">mansoor0x</a>",
+                        + "<a href=\"https://github.com/raw13g/raw13g.github.io\" target=\"_blank\" rel=\"noopener\">raw-games</a>",
                     manualLabel: "or run a specific firmware's offsets manually:",
                     legAuto: "<b>auto</b> &mdash; detects your console's firmware from its browser and launches the matching offsets automatically.",
                     legGold: "<b>gold mark</b> &mdash; that firmware runs <b>GoldHEN</b>.",
@@ -415,7 +444,8 @@
                     cacheUnavailable: "cache unavailable",
                     cacheFailedTap: "CACHE FAILED -- press X or tap to run anyway",
                     cacheObsolete: "cache obsolete",
-                    cacheObsoleteTap: "CACHE OBSOLETE -- press X or tap to run"
+                    cacheObsoleteTap: "CACHE OBSOLETE -- press X or tap to run",
+                    tapRun: "run"
                 },
                 ar: {
                     dir: "rtl",
@@ -453,7 +483,8 @@
                     cacheUnavailable: "الذاكرة المؤقتة غير متوفرة",
                     cacheFailedTap: "فشلت الذاكرة المؤقتة -- اضغط X أو المس للتشغيل رغم ذلك",
                     cacheObsolete: "الذاكرة المؤقتة قديمة",
-                    cacheObsoleteTap: "الذاكرة المؤقتة قديمة -- اضغط X أو المس للتشغيل"
+                    cacheObsoleteTap: "الذاكرة المؤقتة قديمة -- اضغط X أو المس للتشغيل",
+                    tapRun: "تشغيل"
                 }
             };
 
@@ -479,6 +510,7 @@
             var stateEl = document.getElementById("state");
             var detEl = document.getElementById("det");
             var cacheEl = document.getElementById("cache");
+            var tapBtn = document.getElementById("tapBtn");
             var creditsEl = document.getElementById("credits");
             var langBtn = document.getElementById("lang");
             var manualLabelEl = document.getElementById("manualLabel");
@@ -488,6 +520,7 @@
 
             var curStateKey = "detecting", curStateParams = null, curStateClass = null;
             var curCacheKey = null, curCacheParams = null, curCacheOk = false;
+            var tapActive = false;
 
             function setState(key, cls, p) {
                 curStateKey = key; curStateClass = cls; curStateParams = p;
@@ -518,6 +551,7 @@
                 stateEl.className = curStateClass || "";
                 cacheEl.textContent = curCacheKey ? t(curCacheKey, curCacheParams) : "";
                 cacheEl.className = curCacheOk ? "cacheok" : "";
+                if (tapBtn) tapBtn.textContent = t("tapRun");
             }
 
             if (langBtn) {
@@ -615,15 +649,25 @@
             var target = "jb.html" + location.search;
             function go() { setState("loading", "warn"); location.replace(target); }
 
+            // Only a real <button> triggers the jailbreak now -- a native button's
+            // "click" event already fires for mouse clicks, touch taps, and Enter/Space
+            // on a focused element, which is how the PS4/PS3 browser reports the X
+            // button on whatever control currently has focus. Autofocusing the button
+            // means X works immediately, with no accidental screen-tap launches.
             function waitForTap(key, action, p) {
                 setState(key, "warn", p);
+                if (!tapBtn) return;
+                tapBtn.textContent = t("tapRun");
+                tapBtn.className = "show";
+                tapActive = true;
                 function fire() {
-                    window.removeEventListener("click", fire);
-                    window.removeEventListener("keydown", fire);
+                    tapBtn.removeEventListener("click", fire);
+                    tapBtn.className = "";
+                    tapActive = false;
                     action();
                 }
-                window.addEventListener("click", fire);
-                window.addEventListener("keydown", fire);
+                tapBtn.addEventListener("click", fire);
+                try { tapBtn.focus(); } catch (e) { }
             }
 
             // Off-target consoles are not launched automatically -- one tap still runs
